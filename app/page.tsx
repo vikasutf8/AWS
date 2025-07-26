@@ -5,31 +5,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import FileFolderList from "@/components/FileFolderList";
+import FileFolderList, { FileItem, FolderItem } from "@/components/FileFolderList";
 
 export default function Home() {
-  const [data, setData] = useState<{ files: any[]; folders: any[] } | null>(null);
+  const [data, setData] = useState<{ files: FileItem[]; folders: FolderItem[] } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/objects");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const json = await response.json();
+    fetch("/api/objects")
+      .then((res) => res.json())
+      .then((json: { files: FileItem[]; folders: FolderItem[] }) => {
         setData({ files: json.files || [], folders: json.folders || [] });
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to load data. Please try again later.");
-      } finally {
         setLoading(false);
-      }
-    };
-
-    fetchData();
+      })
+      .catch(() => {
+        setError("Failed to load data");
+        setLoading(false);
+      });
   }, []);
 
   return (

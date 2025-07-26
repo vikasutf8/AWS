@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { UserProfile, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar: React.FC = () => {
     return (

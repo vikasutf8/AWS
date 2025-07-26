@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileIcon, FolderIcon, FileText, FileCode, FileImage, MoreVertical, Download, Trash2, Share2, ChevronRight } from "lucide-react";
+import { FileIcon, FolderIcon, FileText, FileCode, FileImage, MoreVertical, Download, Trash2, Share2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
 // UploadButton component for folder upload
 function UploadButton({ folderKey }: { folderKey: string }) {
@@ -54,8 +54,8 @@ function UploadButton({ folderKey }: { folderKey: string }) {
       if (!putRes.ok) throw new Error('Upload failed');
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
-    } catch (err: any) {
-      setError(err.message || 'Upload failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
       setLoading(false);
     }
@@ -201,7 +201,7 @@ const FolderAccordion = ({ folder, level = 0 }: { folder: FolderItem; level?: nu
         files: data.files || [],
         folders: data.folders || []
       });
-    } catch (err) {
+    } catch {
       setError('Failed to load folder contents');
     } finally {
       setIsLoading(false);
